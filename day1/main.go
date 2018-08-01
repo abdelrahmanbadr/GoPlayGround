@@ -17,19 +17,22 @@ func NewStudent() Student {
 func main() {
 	fmt.Println(NewStudent())
 	x := 0
-	y := -1
-	var sum int = x + y
-	result, err := sumSlice(sum)
+	y := 0
+	var sum int = Sum(x, y)
+	result, err := SumSlice(sum)
 	if err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println(result)
 	}
-	mapData()
+	MapData()
 
 }
+func Sum(num1 int, num2 int) int {
+	return num1 + num2
+}
 
-func sumSlice(len int) (int, error) {
+func SumSlice(len int) (int, error) {
 	if len < 0 {
 		return 0, errors.New("no negative number allowed")
 	}
@@ -44,7 +47,7 @@ func sumSlice(len int) (int, error) {
 	return sum, nil
 }
 
-func mapData() {
+func MapData() {
 	studentAges := make(map[string]int)
 	studentAges["st1"] = 22
 	studentAges["st2"] = 18
