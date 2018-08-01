@@ -5,7 +5,17 @@ import (
 	"fmt"
 )
 
+type Student struct {
+	Age  int
+	Name string
+}
+
+func NewStudent() Student {
+	return Student{Age: 18, Name: "ahmed"}
+}
+
 func main() {
+	fmt.Println(NewStudent())
 	x := 0
 	y := -1
 	var sum int = x + y
@@ -16,6 +26,7 @@ func main() {
 		fmt.Println(result)
 	}
 	mapData()
+
 }
 
 func sumSlice(len int) (int, error) {
