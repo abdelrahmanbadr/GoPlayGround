@@ -50,6 +50,7 @@ func (post Post) Update(id string, p Post) Post {
 	for index, item := range posts {
 		if item.Id == id {
 			posts = append(posts[:index], posts[index+1:]...)
+			p.Id = id
 			posts = append(posts, p)
 			return p
 		}
