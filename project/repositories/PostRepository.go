@@ -3,16 +3,22 @@ package repositories
 import (
 	"errors"
 
+	. "../interfaces"
 	. "../models"
 )
 
 type PostRepository struct {
-	Post
+	post *Post
+}
+
+func NewPostRepository(post *Post) IPostRepository {
+
+	return PostRepository{post}
 }
 
 var posts []Post
 
-func (post *PostRepository) GetPostById(id string) (Post, error) {
+func (post PostRepository) GetPostById(id string) (Post, error) {
 	for _, item := range posts {
 		if item.Id == id {
 			return item, nil
@@ -20,13 +26,13 @@ func (post *PostRepository) GetPostById(id string) (Post, error) {
 	}
 	return Post{}, errors.New("Id Not Found")
 }
-func (post *PostRepository) GetAllPosts() []Post {
+func (post PostRepository) GetAllPosts() []Post {
 	return posts
 }
 func (post *PostRepository) InsertPost(p Post) {
 	posts = append(posts, p)
 }
-func (post *PostRepository) Remove(id string) ([]Post, error) {
+func (post PostRepository) Remove(id string) ([]Post, error) {
 	for index, item := range posts {
 		if item.Id == id {
 			posts = append(posts[:index], posts[index+1:]...)
@@ -46,7 +52,7 @@ func (post *PostRepository) Remove(id string) ([]Post, error) {
 // 	}
 // 	return Post{}, errors.New("Id Not Found")
 // }
-func (post *PostRepository) Update(id string, p Post) (Post, error) {
+func (post PostRepository) Update(id string, p Post) (Post, error) {
 	for index, item := range posts {
 		if item.Id == id {
 			posts = append(posts[:index], posts[index+1:]...)
