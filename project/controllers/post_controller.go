@@ -46,6 +46,7 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 	}
 	RespondWithJSON(w, http.StatusOK, post)
 }
+
 func UpdatePost(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	params := mux.Vars(r)
