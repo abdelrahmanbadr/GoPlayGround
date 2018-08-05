@@ -4,8 +4,6 @@ import (
 	"github.com/twinj/uuid"
 )
 
-var posts []Post
-
 type Post struct {
 	Id      string `json:"id"`
 	Title   string `json:"title"`
