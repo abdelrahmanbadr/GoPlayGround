@@ -12,13 +12,12 @@ type PostRepository struct {
 }
 
 func NewPostRepository(post *Post) IPostRepository {
-
-	return PostRepository{post}
+	return &PostRepository{post}
 }
 
 var posts []Post
 
-func (post PostRepository) GetPostById(id string) (Post, error) {
+func (p *PostRepository) GetPostById(id string) (Post, error) {
 	for _, item := range posts {
 		if item.Id == id {
 			return item, nil
@@ -26,13 +25,13 @@ func (post PostRepository) GetPostById(id string) (Post, error) {
 	}
 	return Post{}, errors.New("Id Not Found")
 }
-func (post PostRepository) GetAllPosts() []Post {
+func (p *PostRepository) GetAllPosts() []Post {
 	return posts
 }
-func (post *PostRepository) InsertPost(p Post) {
-	posts = append(posts, p)
+func (p *PostRepository) InsertPost(post Post) {
+	posts = append(posts, post)
 }
-func (post PostRepository) Remove(id string) ([]Post, error) {
+func (p *PostRepository) RemovePost(id string) ([]Post, error) {
 	for index, item := range posts {
 		if item.Id == id {
 			posts = append(posts[:index], posts[index+1:]...)
@@ -43,23 +42,27 @@ func (post PostRepository) Remove(id string) ([]Post, error) {
 	return posts, errors.New("Id Not Found")
 }
 
-//cannot define new method on non-local type model.post
-// func (post Post) GetPostById(id string) (Post, error) {
-// 	for _, item := range posts {
-// 		if item.Id == id {
-// 			return item, nil
-// 		}
-// 	}
-// 	return Post{}, errors.New("Id Not Found")
-// }
-func (post PostRepository) Update(id string, p Post) (Post, error) {
+func (p *PostRepository) UpdatePost(id string, post Post) (Post, error) {
 	for index, item := range posts {
 		if item.Id == id {
 			posts = append(posts[:index], posts[index+1:]...)
-			p.Id = id
-			posts = append(posts, p)
-			return p, nil
+			post.Id = id
+			posts = append(posts, post)
+			return post, nil
 		}
 	}
 	return Post{}, errors.New("Id Not Found")
+}
+
+func (p *PostRepository) AddCommentToPost(postId string, c Comment) error {
+	post, err := p.GetPostById(postId)
+	if err != nil {
+		return err
+	}
+	post.Comments = append(post.Comments, c)
+	_, err = p.UpdatePost(postId, post)
+	if err != nil {
+		return err
+	}
+	return nil
 }

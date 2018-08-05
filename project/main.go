@@ -16,6 +16,8 @@ func main() {
 	router.HandleFunc("/api/posts/{id}", DeletePost).Methods("DELETE")
 	router.HandleFunc("/api/posts/{id}", GetPost).Methods("GET")
 	router.HandleFunc("/api/posts/{id}", UpdatePost).Methods("PUT")
+	///////////
+	router.HandleFunc("/api/posts/{id}/comments", AddComment).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(":8000", router))
 }

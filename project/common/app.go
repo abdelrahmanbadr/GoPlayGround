@@ -5,7 +5,6 @@ import (
 	"net/http"
 )
 
-// separate them
 func RespondWithError(w http.ResponseWriter, code int, message string) {
 	RespondWithJSON(w, code, map[string]string{"error": message})
 }
