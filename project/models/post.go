@@ -1,6 +1,8 @@
 package models
 
 import (
+	"errors"
+
 	"github.com/twinj/uuid"
 )
 
@@ -29,31 +31,33 @@ func (post Post) InsertPost(p Post) {
 func (post Post) GetAllPosts() []Post {
 	return posts
 }
-func (post Post) Remove(id string) []Post {
+func (post Post) Remove(id string) ([]Post, error) {
 	for index, item := range posts {
 		if item.Id == id {
 			posts = append(posts[:index], posts[index+1:]...)
-			break
+			// break
+			return posts, nil
 		}
 	}
-	return posts
+	return posts, errors.New("Id Not Found")
 }
-func (post Post) GetPostById(id string) Post {
+func (post Post) GetPostById(id string) (Post, error) {
 	for _, item := range posts {
 		if item.Id == id {
-			return item
+			return item, nil
 		}
 	}
-	return Post{}
+	return Post{}, errors.New("Id Not Found")
 }
-func (post Post) Update(id string, p Post) Post {
+
+func (post Post) Update(id string, p Post) (Post, error) {
 	for index, item := range posts {
 		if item.Id == id {
 			posts = append(posts[:index], posts[index+1:]...)
 			p.Id = id
 			posts = append(posts, p)
-			return p
+			return p, nil
 		}
 	}
-	return Post{}
+	return Post{}, errors.New("Id Not Found")
 }

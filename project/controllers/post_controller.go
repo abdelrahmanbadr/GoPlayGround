@@ -26,19 +26,23 @@ func ListPosts(w http.ResponseWriter, r *http.Request) {
 func DeletePost(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	postId := params["id"]
-	posts := PostInstance.Remove(postId)
-	json.NewEncoder(w).Encode(posts)
-
+	posts, err := PostInstance.Remove(postId)
+	if err != nil {
+		RespondWithError(w, http.StatusNotFound, err.Error())
+		return
+	}
+	RespondWithJSON(w, http.StatusOK, posts)
 }
 
 func GetPost(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	postId := params["id"]
-	post := PostInstance.GetPostById(postId)
-	json.NewEncoder(w).Encode(post)
-	// if no id exists will return empty object
-	// json.NewEncoder(w).Encode(&models.Book{})
-
+	post, err := PostInstance.GetPostById(postId)
+	if err != nil {
+		RespondWithError(w, http.StatusNotFound, err.Error())
+		return
+	}
+	RespondWithJSON(w, http.StatusOK, post)
 }
 func UpdatePost(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
@@ -46,7 +50,22 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 	postId := params["id"]
 	var post = PostInstance
 	json.NewDecoder(r.Body).Decode(&post)
-	post = PostInstance.Update(postId, post)
-	json.NewEncoder(w).Encode(post)
+	post, err := PostInstance.Update(postId, post)
+	if err != nil {
+		RespondWithError(w, http.StatusNotFound, err.Error())
+		return
+	}
+	RespondWithJSON(w, http.StatusOK, post)
 
+}
+
+// separate them
+func RespondWithError(w http.ResponseWriter, code int, message string) {
+	RespondWithJSON(w, code, map[string]string{"error": message})
+}
+func RespondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
+	response, _ := json.Marshal(payload)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	w.Write(response)
 }

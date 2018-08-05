@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -19,7 +18,4 @@ func main() {
 	router.HandleFunc("/api/posts/{id}", UpdatePost).Methods("PUT")
 
 	log.Fatal(http.ListenAndServe(":8000", router))
-}
-func test(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "test")
 }
