@@ -37,7 +37,7 @@ func struct_declaration() {
 //Values of two different types can’t be assigned to each other, even if they’re compatible.
 func duration_dec() {
 	//dur declared and set to its zero value
-	// var dur Duration
+	var dur Duration
 	// will cause cannot error use int64(1000) (type int64) as type Duration in assignment
 	dur = int64(1000)
 }
