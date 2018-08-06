@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -8,18 +9,44 @@ import (
 
 func TestListPosts(t *testing.T) {
 
-	req, _ := http.NewRequest("GET", "", nil)
+	req, err := http.NewRequest("GET", "localhost:8080/api/posts", nil)
+	if err != nil {
+		t.Fatalf("couldn't create request")
+	}
 
-	recorder := httptest.NewRecorder()
+	resp := httptest.NewRecorder()
 
 	hf := http.HandlerFunc(ListPosts)
 
-	hf.ServeHTTP(recorder, req)
+	hf.ServeHTTP(resp, req)
 
-	// Check the status code is what we expect.
-	if status := recorder.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusOK)
+	// // Check the status code is what we expect.
+	checkResponseCode(t, http.StatusOK, resp.Code)
+
+}
+
+func checkResponseCode(t *testing.T, expected, actual int) {
+	if expected != actual {
+		t.Errorf("Expected response code %d. Got %d\n", expected, actual)
 	}
+}
 
+func TestGetNonExistentPost(t *testing.T) {
+
+	req, _ := http.NewRequest("GET", "localhost:8080/api/posts/11", nil)
+	// response := executeRequest(req)
+	resp := httptest.NewRecorder()
+
+	hf := http.HandlerFunc(GetPost)
+
+	hf.ServeHTTP(resp, req)
+
+	checkResponseCode(t, http.StatusNotFound, resp.Code)
+
+	var m map[string]string
+	json.Unmarshal(resp.Body.Bytes(), &m)
+	// fmt.Println(m)
+	if m["error"] != "Id Not Found" {
+		t.Errorf("Expected the 'error' key of the response to be set to 'Id Not Found'. Got '%s'", m["error"])
+	}
 }

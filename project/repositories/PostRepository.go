@@ -45,7 +45,7 @@ func (p *PostRepository) RemovePost(id string) ([]Post, error) {
 func (p *PostRepository) UpdatePost(id string, post Post) (Post, error) {
 	for index, item := range posts {
 		if item.Id == id {
-			posts = append(posts[:index], posts[index+1:]...)
+			post = posts[index]
 			post.Id = id
 			posts = append(posts, post)
 			return post, nil
