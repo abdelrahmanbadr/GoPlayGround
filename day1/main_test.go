@@ -17,3 +17,19 @@ func Test_SumSlice(t *testing.T) {
 		t.Errorf("Sum was incorrect, got: %d, want: %d.", sum, 3)
 	}
 }
+
+func TestTableSum(t *testing.T) {
+	tests := []struct {
+		input1   int
+		input2   int
+		expected int
+	}{
+		{1, 2, 3},
+		{2, 3, 5},
+	}
+	for _, test := range tests {
+		if output := Sum(test.input1, test.input2); output != test.expected {
+			t.Error("Sum was incorrect, got:", test.expected)
+		}
+	}
+}
