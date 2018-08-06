@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	. "../common"
+	. "../mapper"
 	. "../models"
 	. "../repositories"
 	"github.com/gorilla/mux"
@@ -13,9 +14,7 @@ import (
 var RepositoryInstance = PostRepository{}
 
 func AddPost(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
-	post := NewPost()
-	json.NewDecoder(r.Body).Decode(&post)
+	post := DataMapper(r)
 	RepositoryInstance.InsertPost(post)
 	json.NewEncoder(w).Encode(post)
 }
