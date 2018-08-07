@@ -10,21 +10,18 @@ import (
 	. "../repositories"
 	. "../validation"
 	"github.com/gorilla/mux"
-	"gopkg.in/go-playground/validator.v9"
 )
 
-var validate *validator.Validate
 var RepositoryInstance = PostRepository{}
-var MapperInstance = PostMapper{}
-var ValidationInstance = PostValidation{}
+var PostMapperInstance = PostMapper{}
+var PostValidationInstance = PostValidation{}
+var CommentValidationInstance = CommentValidation{}
+var CommentMapperInstance = CommentMapper{}
 
 func AddPost(w http.ResponseWriter, r *http.Request) {
-	// it should be separated in other file or it's fine ??
-	validate = validator.New()
-	validate.RegisterStructValidation(ValidationInstance.PostStructLevelValidation, Post{})
 	post := NewPost()
-	post = MapperInstance.DataMapper(post, r)
-	err := validate.Struct(post)
+	post = PostMapperInstance.DataMapper(post, r)
+	err := PostValidationInstance.PostValidation(post)
 	if err != nil {
 		RespondWithError(w, http.StatusBadRequest, err.Error())
 		return
@@ -64,7 +61,7 @@ func UpdatePost(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	postId := params["id"]
 	var post = Post{}
-	post = MapperInstance.DataMapper(post, r)
+	post = PostMapperInstance.DataMapper(post, r)
 	post, err := RepositoryInstance.UpdatePost(postId, post)
 	if err != nil {
 		RespondWithError(w, http.StatusNotFound, err.Error())
@@ -79,8 +76,13 @@ func AddComment(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	postId := params["id"]
 	comment := NewComment()
-	json.NewDecoder(r.Body).Decode(&comment)
-	err := RepositoryInstance.AddCommentToPost(postId, comment)
+	comment = CommentMapperInstance.DataMapper(comment, r)
+	err := CommentValidationInstance.CommentValidation(comment)
+	if err != nil {
+		RespondWithError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	err = RepositoryInstance.AddCommentToPost(postId, comment)
 	if err != nil {
 		RespondWithError(w, http.StatusNotFound, err.Error())
 		return
