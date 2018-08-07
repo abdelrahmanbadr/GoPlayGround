@@ -8,15 +8,27 @@ import (
 	. "../mapper"
 	. "../models"
 	. "../repositories"
+	. "../validation"
 	"github.com/gorilla/mux"
+	"gopkg.in/go-playground/validator.v9"
 )
 
+var validate *validator.Validate
 var RepositoryInstance = PostRepository{}
 var MapperInstance = PostMapper{}
+var ValidationInstance = PostValidation{}
 
 func AddPost(w http.ResponseWriter, r *http.Request) {
+	// it should be separated in other file or it's fine ??
+	validate = validator.New()
+	validate.RegisterStructValidation(ValidationInstance.PostStructLevelValidation, Post{})
 	post := NewPost()
 	post = MapperInstance.DataMapper(post, r)
+	err := validate.Struct(post)
+	if err != nil {
+		RespondWithError(w, http.StatusBadRequest, err.Error())
+		return
+	}
 	RepositoryInstance.InsertPost(post)
 	json.NewEncoder(w).Encode(post)
 }
