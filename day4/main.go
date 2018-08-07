@@ -17,7 +17,7 @@ type user struct {
 	privileged bool
 }
 type admin struct {
-	person user
+	person user // Embedded Type
 	level  string
 }
 
