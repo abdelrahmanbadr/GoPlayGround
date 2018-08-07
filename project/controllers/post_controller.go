@@ -12,9 +12,11 @@ import (
 )
 
 var RepositoryInstance = PostRepository{}
+var MapperInstance = PostMapper{}
 
 func AddPost(w http.ResponseWriter, r *http.Request) {
-	post := DataMapper(r)
+	post := NewPost()
+	post = MapperInstance.DataMapper(post, r)
 	RepositoryInstance.InsertPost(post)
 	json.NewEncoder(w).Encode(post)
 }
@@ -47,11 +49,10 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdatePost(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
 	params := mux.Vars(r)
 	postId := params["id"]
 	var post = Post{}
-	json.NewDecoder(r.Body).Decode(&post)
+	post = MapperInstance.DataMapper(post, r)
 	post, err := RepositoryInstance.UpdatePost(postId, post)
 	if err != nil {
 		RespondWithError(w, http.StatusNotFound, err.Error())

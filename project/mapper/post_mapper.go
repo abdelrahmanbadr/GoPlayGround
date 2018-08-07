@@ -4,12 +4,18 @@ import (
 	"encoding/json"
 	"net/http"
 
+	. "../interfaces"
 	. "../models"
 )
 
-func DataMapper(r *http.Request) Post {
+func (m PostMapper) DataMapper(post Post, r *http.Request) Post {
 	defer r.Body.Close()
-	post := NewPost()
 	json.NewDecoder(r.Body).Decode(&post)
 	return post
+}
+
+type PostMapper struct{}
+
+func NewPostMapper() IPostMapper {
+	return PostMapper{}
 }

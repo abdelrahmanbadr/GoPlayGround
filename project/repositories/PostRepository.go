@@ -43,14 +43,16 @@ func (p *PostRepository) RemovePost(id string) ([]Post, error) {
 }
 
 func (p *PostRepository) UpdatePost(id string, post Post) (Post, error) {
-	for index, item := range posts {
-		if item.Id == id {
-			post = posts[index]
-			post.Id = id
-			posts = append(posts, post)
-			return post, nil
-		}
-	}
+	// for index, item := range posts {
+	// 	if item.Id == id {
+	// 		currentPost := &posts[index]
+	// 		currentPost.Title = post.Title
+	// 		fmt.Println(currentPost, post)
+	// 		// post.Id = id
+	// 		// posts = append(posts, post)
+	// 		return post, nil
+	// 	}
+	// }
 	return Post{}, errors.New("Id Not Found")
 }
 
