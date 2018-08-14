@@ -7,6 +7,7 @@ import (
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Teting golang with docker")
+	fmt.Println("testing docker")
 }
 
 func main() {
