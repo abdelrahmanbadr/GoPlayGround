@@ -1,0 +1,15 @@
+#will work without Dockerfile
+version: "2"
+
+services:
+  golang:
+    image: golang:latest
+    volumes:
+      - .:/go/src/go-with-compose
+    working_dir: /go/src/go-with-compose
+    command: go run main.go
+    # links:
+    #   - redis
+  
+  # redis:
+  #   image: redis:alpine

@@ -1,0 +1,11 @@
+version: '2'
+services:
+  golang:
+    container_name: golang
+    build: ./docker
+    # command: go run main.go
+    volumes:
+      - .:/docker_example
+    working_dir: /docker_example
+    ports:
+      - "8080:8080"

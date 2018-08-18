@@ -1,3 +1,0 @@
- golang
-  build: golang
-  container_name : docker_golang
