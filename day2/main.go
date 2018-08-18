@@ -6,7 +6,7 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Teting11")
+	fmt.Fprintf(w, "Teting Dockerfile")
 	// fmt.Println("testing docker")
 }
 
